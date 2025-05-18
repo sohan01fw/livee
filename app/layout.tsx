@@ -1,17 +1,9 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeWrapper } from "@/lib/themeWrapper";
-
-// const geistSans = Geist({
-//   variable: "--font-geist-sans",
-//   subsets: ["latin"],
-// });
-
-// const geistMono = Geist_Mono({
-//   variable: "--font-geist-mono",
-//   subsets: ["latin"],
-// });
+import Navbar from "@/components/Navbar";
+import { ClerkProvider } from "@clerk/nextjs";
+import Sidebar from "@/components/SideBar";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -24,18 +16,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head />
-      <body>
-        <ThemeWrapper
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-        </ThemeWrapper>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en" suppressHydrationWarning>
+        <head />
+        <body suppressHydrationWarning>
+          <ThemeWrapper
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <nav>
+              <Navbar />
+            </nav>
+            <div>
+              <Sidebar />
+            </div>
+            <main>{children}</main>
+          </ThemeWrapper>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
