@@ -1,6 +1,6 @@
 "use client";
 
-import { Home, Compass, Heart } from "lucide-react";
+import { Compass, Heart } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -27,14 +27,13 @@ export default function Sidebar() {
   return (
     <aside
       className={cn(
-        "flex flex-col bg-black text-white transition-width duration-300",
+        "flex flex-col bg-black text-white transition-width duration-300 o ",
         collapsed ? "w-16" : "w-64",
-        "min-h-screen", // ensure full viewport height
       )}
     >
       {/* Main nav */}
       <div className="flex flex-col px-2 space-y-1">
-        <NavItem icon={<Home size={18} />} label="Home" collapsed={collapsed} />
+        {/* <NavItem icon={<Home size={18} />} label="Home" collapsed={collapsed} /> */}
         <NavItem
           icon={<Compass size={18} />}
           label="Browse"
@@ -52,7 +51,7 @@ export default function Sidebar() {
 
       {/* Scrollable recommendations */}
       <ScrollArea className="flex-1">
-        <div className="flex flex-col p-4 space-y-3">
+        <div className="flex flex-col p-4 space-y-3    ">
           {!collapsed && (
             <>
               <h3 className="text-sm text-green-500 font-semibold">

@@ -11,6 +11,7 @@ import {
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"; // optional: for profile icon
 import { SignOutButton } from "@clerk/nextjs";
+import Link from "next/link";
 
 export function UserDropdown() {
   return (
@@ -25,7 +26,9 @@ export function UserDropdown() {
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem>Profile</DropdownMenuItem>
-        <DropdownMenuItem>Dashboard</DropdownMenuItem>
+        <Link href="/dashboard">
+          <DropdownMenuItem>Dashboard</DropdownMenuItem>
+        </Link>
         <DropdownMenuItem>Preferences</DropdownMenuItem>
         <DropdownMenuItem>
           <SignOutButton>Logout</SignOutButton>
