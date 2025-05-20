@@ -1,9 +1,14 @@
 "use client";
 
-import { Compass, Heart } from "lucide-react";
+import {
+  ArrowLeftFromLine,
+  ArrowRightFromLine,
+  Compass,
+  Heart,
+} from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const recommended = [
   { name: "JimothyBilliams", viewers: 914, category: "Just Chatting" },
@@ -21,16 +26,43 @@ const recommended = [
 ];
 
 export default function Sidebar() {
-  const [collapsed] = useState(false); // use for collaspable sidebar might implement later
+  const [collapsed, setIsCollapsed] = useState(false);
   const [showAll, setShowAll] = useState(false);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsCollapsed(window.innerWidth < 768); // 'md' is 768px
+    };
+
+    handleResize(); // run once on load
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
   return (
     <aside
       className={cn(
-        "flex flex-col bg-black text-white transition-width duration-300 o ",
-        collapsed ? "w-16" : "w-64",
+        "flex flex-col bg-black text-white transition-width duration-300  p-2 ",
+        collapsed ? "w-15" : "w-64",
       )}
     >
+      {/* Collapse button */}
+      <div className="m-2 flex ">
+        {!collapsed ? (
+          <div
+            className="ml-auto hover:cursor-pointer"
+            onClick={() => setIsCollapsed(true)}
+          >
+            <ArrowLeftFromLine size={18} />
+          </div>
+        ) : (
+          <div
+            className=" hover:cursor-pointer"
+            onClick={() => setIsCollapsed(false)}
+          >
+            <ArrowRightFromLine size={18} />
+          </div>
+        )}
+      </div>
       {/* Main nav */}
       <div className="flex flex-col px-2 space-y-1">
         {/* <NavItem icon={<Home size={18} />} label="Home" collapsed={collapsed} /> */}
@@ -110,7 +142,7 @@ function NavItem({
     >
       {/* fix icon sizing so it never shrinks */}
       <div className="flex-shrink-0">{icon}</div>
-      {!collapsed && <span className="text-sm font-medium">{label}</span>}
+      {!collapsed && <span className=" text-sm font-medium ">{label}</span>}
     </div>
   );
 }

@@ -25,11 +25,36 @@ export function UserDropdown() {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Profile</DropdownMenuItem>
-        <Link href="/dashboard">
+        <Link href="/profile">
+          <DropdownMenuItem>Profile</DropdownMenuItem>
+        </Link>
+        <Link href="/dashboard/stream">
           <DropdownMenuItem>Dashboard</DropdownMenuItem>
         </Link>
-        <DropdownMenuItem>Preferences</DropdownMenuItem>
+        <Link href="settings">
+          <DropdownMenuItem>Settings</DropdownMenuItem>
+        </Link>
+        <DropdownMenuItem>
+          <SignOutButton>Logout</SignOutButton>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+export function DashboardDropdown() {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Avatar>
+          <AvatarImage src="https://github.com/shadcn.png" />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuSeparator />
+        <Link href="/">
+          <DropdownMenuItem>Back to Home</DropdownMenuItem>
+        </Link>
         <DropdownMenuItem>
           <SignOutButton>Logout</SignOutButton>
         </DropdownMenuItem>
