@@ -18,12 +18,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Copy, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
-import {
-  createKeyUrl,
-  // createKeyUrl,
-  getKeyUrl,
-  // deleteIngress,
-} from "@/lib/services/livekit/KeyUrl";
+import { createKeyUrl, getKeyUrl } from "@/lib/actions/livekit/ingress";
 
 export function StreamKey() {
   const [streamKey, setStreamkey] = useState<string>("");
