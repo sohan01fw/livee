@@ -1,4 +1,11 @@
-import { MonitorPlay, Play, Settings, Trophy, UserPen } from "lucide-react";
+import {
+  Key,
+  MonitorPlay,
+  Play,
+  Settings,
+  Trophy,
+  UserPen,
+} from "lucide-react";
 
 import {
   Sidebar,
@@ -13,6 +20,11 @@ import Link from "next/link";
 
 // Menu items.
 const items = [
+  {
+    title: "Stream Key",
+    url: "/dashboard/key",
+    icon: Key,
+  },
   {
     title: "Stream",
     url: "/dashboard/stream",
