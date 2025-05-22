@@ -2,7 +2,7 @@
 import { Providers } from "@/lib/providers";
 import "./globals.css";
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;

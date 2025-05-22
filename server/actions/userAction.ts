@@ -1,9 +1,18 @@
 // app/actions/userActions.ts
 "use server";
 
-import { User } from "@/types/auth";
-import { createUser } from "../services/userService";
+import { UserType } from "@/types/auth";
+import { createUser, getUser, userInDb } from "../services/userService";
 
-export async function createUserAction(data: User) {
+async function userInDbAction(email: string) {
+  return await userInDb(email);
+}
+async function createUserAction(data: UserType) {
   return await createUser(data);
 }
+
+async function getUserAction(email: string) {
+  return await getUser(email);
+}
+
+export { createUserAction, userInDbAction, getUserAction };

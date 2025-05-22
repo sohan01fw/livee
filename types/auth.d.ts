@@ -1,5 +1,6 @@
 import { User as PrismaUser } from "@prisma/client";
 
-type User = Pick<PrismaUser, "name" | "email" | "pic" | "streamkey" | "bio">;
+type UserType = Pick<PrismaUser, "name" | "email"> &
+  Partial<Pick<PrismaUser, "pic" | "bio" | "streamkey">>;
 
-export { User };
+export { UserType };

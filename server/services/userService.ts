@@ -1,27 +1,26 @@
 import { prisma } from "@/lib/prisma";
-import { User } from "@/types/auth";
+import { UserType } from "@/types/auth";
 
 // check user in db
-const userInDb = async (email: string) => {
+const userInDb = async (email: string): Promise<boolean> => {
   try {
     const user = await prisma.user.findUnique({
       where: {
         email: email,
       },
     });
-    return user;
-  } catch (e) {
-    // more specific error handling
-    if (e instanceof Error && e.message.includes("Not found")) {
-      throw new Error("User not found.");
+    if (!user) {
+      return false;
     }
+    return true;
+  } catch (e) {
     // log with context
     console.error("[userInDb] unexpected error:", e);
     throw new Error("Failed to check user. Please try again later.");
   }
 };
 // create a new user
-const createUser = async (data: User) => {
+const createUser = async (data: UserType) => {
   try {
     await prisma.user.create({
       data: {
@@ -43,4 +42,23 @@ const createUser = async (data: User) => {
   }
 };
 
-export { createUser, userInDb };
+// get user by email
+const getUser = async (email: string) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        email: email,
+      },
+    });
+    return user;
+  } catch (e) {
+    if (e instanceof Error && e.message.includes("Not found")) {
+      throw new Error("User not found.");
+    }
+    // log with context
+    console.error("[getUser] unexpected error:", e);
+    throw new Error("Failed to get user. Please try again later.");
+  }
+};
+
+export { createUser, userInDb, getUser };

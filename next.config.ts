@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
   /* config options here */
   //add the image src
   images: {
-    domains: ["images.unsplash.com"],
+    domains: ["images.unsplash.com", "via.placeholder.com", "img.clerk.com"],
   },
 };
 
