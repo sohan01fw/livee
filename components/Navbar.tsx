@@ -44,18 +44,22 @@ const Navbar = () => {
           <Bell size={20} />
         </div>
         {/* Desktop Auth Buttons */}
-        {!isSignedIn && isLoaded ? (
-          <div className="hidden items-center space-x-2 md:flex">
-            <Button variant="ghost" asChild>
-              <AuthDialog type="login" />
-            </Button>
-            <Button
-              className="bg-green-500 hover:bg-green-600 text-black"
-              asChild
-            >
-              <AuthDialog type="signup" />
-            </Button>
-          </div>
+        {!isSignedIn ? (
+          !isLoaded ? (
+            <div>Loading...</div>
+          ) : (
+            <div className="hidden items-center space-x-2 md:flex">
+              <Button variant="ghost" asChild>
+                <AuthDialog type="login" />
+              </Button>
+              <Button
+                className="bg-green-500 hover:bg-green-600 text-black"
+                asChild
+              >
+                <AuthDialog type="signup" />
+              </Button>
+            </div>
+          )
         ) : (
           <UserDropdown />
         )}

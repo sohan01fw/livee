@@ -1,5 +1,5 @@
 // app/layout.tsx
-import { Providers } from "@/lib/Providers";
+import { Providers } from "@/lib/providers";
 import "./globals.css";
 
 export default function RootLayout({
