@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Card,
   CardHeader,
@@ -18,12 +18,25 @@ import {
 } from "@/components/ui/tooltip";
 import { Copy, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
-import { createKeyUrl, getKeyUrl } from "@/lib/actions/livekit/ingress";
+import { createKeyUrl } from "@/server/actions/livekit/ingress";
+import { getUserByIdAction } from "@/server/actions/userAction";
 
-export function StreamKey() {
+export function StreamKey({ id }: { id: string }) {
   const [streamKey, setStreamkey] = useState<string>("");
   const [streamUrl, setStreamUrl] = useState<string>("");
   const [masked, setMasked] = useState(true);
+  const [triggered, setTriggered] = useState(false);
+
+  useEffect(() => {
+    const getKeyAndUrl = async () => {
+      const user = await getUserByIdAction(id);
+      console.log("USER:", user);
+      if (!user) return;
+      setStreamkey(user.streamkey || "");
+      setStreamUrl(user.streamurl || "");
+    };
+    getKeyAndUrl();
+  }, [id, triggered]);
 
   const copyToClipboard = (value: string, label: string) => {
     navigator.clipboard.writeText(value).then(() => {
@@ -33,19 +46,13 @@ export function StreamKey() {
 
   //create new credentials handler
   const handleCreateNewCredentials = async () => {
-    const { key, url } = await createKeyUrl();
-    setStreamkey(key);
-    setStreamUrl(url);
+    await createKeyUrl(id);
+    setTriggered(!triggered);
     toast.success("created key and url successfully");
-  };
-  const getKeyUrls = async () => {
-    await getKeyUrl();
-    toast.success("sucessfully get  keyandurl");
   };
 
   return (
     <div className="space-y-6 p-4 md:p-6">
-      <Button onClick={getKeyUrls}>Get key and url</Button>
       <Card>
         <CardHeader>
           <CardTitle>Stream Credentials</CardTitle>
@@ -58,14 +65,25 @@ export function StreamKey() {
               <Input value={streamUrl} readOnly className="flex-1" />
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="hover:cursor-pointer"
-                    onClick={() => copyToClipboard(streamUrl, "Stream URL")}
-                  >
-                    <Copy className="h-4 w-4" />
-                  </Button>
+                  {streamUrl === "" ? (
+                    <Button
+                      disabled
+                      variant="ghost"
+                      size="icon"
+                      className="hover:cursor-pointer"
+                    >
+                      <Copy className="h-4 w-4" />
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="hover:cursor-pointer"
+                      onClick={() => copyToClipboard(streamUrl, "Stream URL")}
+                    >
+                      <Copy className="h-4 w-4" />
+                    </Button>
+                  )}
                 </TooltipTrigger>
                 <TooltipContent>Copy URL</TooltipContent>
               </Tooltip>
@@ -82,6 +100,7 @@ export function StreamKey() {
                 readOnly
                 className="flex-1"
               />
+
               <Button
                 variant="ghost"
                 size="icon"
@@ -96,14 +115,25 @@ export function StreamKey() {
               </Button>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="hover:cursor-pointer"
-                    onClick={() => copyToClipboard(streamKey, "Stream Key")}
-                  >
-                    <Copy className="h-4 w-4" />
-                  </Button>
+                  {streamKey === "" ? (
+                    <Button
+                      disabled
+                      variant="ghost"
+                      size="icon"
+                      className="hover:cursor-pointer"
+                    >
+                      <Copy className="h-4 w-4" />
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="hover:cursor-pointer"
+                      onClick={() => copyToClipboard(streamKey, "Stream Key")}
+                    >
+                      <Copy className="h-4 w-4" />
+                    </Button>
+                  )}
                 </TooltipTrigger>
                 <TooltipContent>Copy Key</TooltipContent>
               </Tooltip>

@@ -20,6 +20,7 @@ model User {
   name      String?  @unique
   pic       String?
   bio       String?
+  streamurl String?
   streamkey String?   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -27,7 +28,10 @@ model User {
   //relation
   streams   Streams[]
   achievements Achievements[]
+
+  @@unique([email,id])
 }
+
 
 model Streams {
   id         String   @id @default(uuid())

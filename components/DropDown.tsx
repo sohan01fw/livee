@@ -1,5 +1,4 @@
 "use client";
-
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -12,8 +11,21 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"; // optional: for profile icon
 import { SignOutButton } from "@clerk/nextjs";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { getUserByEmailAction } from "@/server/actions/userAction";
 
-export function UserDropdown() {
+export function UserDropdown({ email }: { email: string | undefined }) {
+  const [userId, setUserId] = useState<string>();
+  useEffect(() => {
+    if (email) {
+      const getUserId = async () => {
+        const userRes = await getUserByEmailAction(email);
+        setUserId(userRes?.id);
+      };
+      getUserId();
+    }
+  }, [email]);
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -28,11 +40,8 @@ export function UserDropdown() {
         <Link href="/profile">
           <DropdownMenuItem>Profile</DropdownMenuItem>
         </Link>
-        <Link href="/dashboard/stream">
+        <Link href={`/dashboard/u/${userId}/stream`}>
           <DropdownMenuItem>Dashboard</DropdownMenuItem>
-        </Link>
-        <Link href="settings">
-          <DropdownMenuItem>Settings</DropdownMenuItem>
         </Link>
         <DropdownMenuItem>
           <SignOutButton>Logout</SignOutButton>

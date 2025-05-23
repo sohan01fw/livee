@@ -1,7 +1,7 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
 import type { Metadata } from "next";
-import { DashSidebar } from "./_components/Sidebar";
-import { Navbar } from "./_components/Navbar";
+import { DashSidebar } from "./u/[selfid]/_components/Sidebar";
+import { Navbar } from "./u/[selfid]/_components/Navbar";
 import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {

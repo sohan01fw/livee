@@ -9,25 +9,17 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
+import useSWR from "swr";
+import { getAllUsersAction } from "@/server/actions/userAction";
+import { User } from "@prisma/client";
+import Image from "next/image";
+import { UserType } from "@/types/user";
 
-const recommended = [
-  { name: "JimothyBilliams", viewers: 914, category: "Just Chatting" },
-  { name: "SamXFrank", viewers: 1800, category: "IRL" },
-  { name: "iceinmyvein", viewers: 1100, category: "Slots & Casino" },
-  { name: "12amcupid", viewers: 449, category: "Slots & Casino" },
-  { name: "pr3s5ure", viewers: 227, category: "Fortnite Zero Build" },
-  {
-    name: "ToriProductions",
-    viewers: 122,
-    category: "World of Warcraft Clas...",
-  },
-  { name: "ExtraStreamer1", viewers: 95, category: "Chess" },
-  { name: "ExtraStreamer2", viewers: 87, category: "Music" },
-];
-
+const fetcher = async () => await getAllUsersAction();
 export default function Sidebar() {
   const [collapsed, setIsCollapsed] = useState(false);
   const [showAll, setShowAll] = useState(false);
+  const [recommended, setRecommended] = useState<UserType[]>([]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -38,6 +30,12 @@ export default function Sidebar() {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  const { data, error, isLoading } = useSWR<User[]>("getalluser", fetcher);
+  useEffect(() => {
+    if (data) setRecommended(data);
+  }, [data]);
+  if (error) return <div>Error loading user</div>;
   return (
     <aside
       className={cn(
@@ -80,7 +78,6 @@ export default function Sidebar() {
 
       {/* Divider */}
       <div className="border-t border-gray-800 my-2" />
-
       {/* Scrollable recommendations */}
       <ScrollArea className="flex-1">
         <div className="flex flex-col p-4 space-y-3    ">
@@ -90,23 +87,31 @@ export default function Sidebar() {
                 Recommended
               </h3>
               <ul className="flex-1 space-y-3 overflow-auto">
-                {(showAll ? recommended : recommended.slice(0, 4)).map((s) => (
-                  <li
-                    key={s.name}
-                    className="flex items-center justify-between hover:cursor-pointer"
-                  >
-                    <div>
-                      <p className="text-sm font-semibold">{s.name}</p>
-                      <p className="text-xs text-gray-400">{s.category}</p>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <span className="h-2 w-2 rounded-full bg-green-500" />
-                      <span className="text-xs">
-                        {s.viewers.toLocaleString()}
-                      </span>
-                    </div>
-                  </li>
-                ))}
+                {isLoading ? (
+                  <div>loading...</div>
+                ) : (
+                  (showAll ? recommended : recommended.slice(0, 4)).map((s) => (
+                    <li
+                      key={s.name}
+                      className="flex items-center justify-between hover:cursor-pointer"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <Image
+                          src={s.pic ?? "https://picsum.photos/seed/picsum/200"}
+                          width={33}
+                          height={33}
+                          alt="profile pic"
+                          className="rounded-full"
+                        />
+                        <p className="text-sm font-semibold">{s.name}</p>
+                      </div>
+                      <div className="flex items-center space-x-1">
+                        <span className="h-2 w-2 rounded-full bg-green-500" />
+                        <span className="text-sm">100</span>
+                      </div>
+                    </li>
+                  ))
+                )}
               </ul>
               {recommended.length > 6 && (
                 <button

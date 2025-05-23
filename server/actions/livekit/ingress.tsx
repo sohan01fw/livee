@@ -10,6 +10,8 @@ import {
   RoomServiceClient,
   TrackSource,
 } from "livekit-server-sdk";
+import { v4 } from "uuid";
+import { updateKeyAndUrlAction } from "./livekitAction";
 
 const ingressClient = new IngressClient(
   process.env.LIVEKIT_URL!,
@@ -24,11 +26,12 @@ const roomServiceClient = new RoomServiceClient(
 );
 
 //create the ingress
-export const createKeyUrl = async (): Promise<KeyUrl> => {
+export const createKeyUrl = async (selfid: string): Promise<void> => {
+  const roomId = v4();
   const ingressOptions: CreateIngressOptions = {
     name: "OBS Stream",
-    roomName: "livee-room-1",
-    participantIdentity: "obs-streamer",
+    roomName: roomId,
+    participantIdentity: selfid,
     bypassTranscoding: true,
     video: new IngressVideoOptions({
       source: TrackSource.CAMERA,
@@ -58,10 +61,13 @@ export const createKeyUrl = async (): Promise<KeyUrl> => {
   const url = ingressData.url;
   const key = ingressData.streamKey;
 
-  return {
-    url,
-    key,
-  };
+  console.log("KEY AND URL:", key, url, selfid);
+  // update the db with new key and url
+  await updateKeyAndUrlAction({
+    id: selfid,
+    streamkey: key,
+    streamurl: url,
+  });
 };
 
 //list the ingress data

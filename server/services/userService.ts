@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { UserType } from "@/types/auth";
+import { UserType } from "@/types/user";
 
 // check user in db
 const userInDb = async (email: string): Promise<boolean> => {
@@ -43,7 +43,7 @@ const createUser = async (data: UserType) => {
 };
 
 // get user by email
-const getUser = async (email: string) => {
+const getUserByEmail = async (email: string) => {
   try {
     const user = await prisma.user.findUnique({
       where: {
@@ -60,5 +60,37 @@ const getUser = async (email: string) => {
     throw new Error("Failed to get user. Please try again later.");
   }
 };
+const getUserById = async (id: string) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: id,
+      },
+    });
+    return user;
+  } catch (e) {
+    if (e instanceof Error && e.message.includes("Not found")) {
+      throw new Error("User not found.");
+    }
+    // log with context
+    console.error("[getUser] unexpected error:", e);
+    throw new Error("Failed to get user. Please try again later.");
+  }
+};
+// get all users
+const getAllUsers = async () => {
+  try {
+    const users = await prisma.user.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    return users;
+  } catch (e) {
+    // log with context
+    console.error("[getAllUsers] unexpected error:", e);
+    throw new Error("Failed to get users. Please try again later.");
+  }
+};
 
-export { createUser, userInDb, getUser };
+export { createUser, userInDb, getUserById, getUserByEmail, getAllUsers };

@@ -1,11 +1,4 @@
-import {
-  Key,
-  MonitorPlay,
-  Play,
-  Settings,
-  Trophy,
-  UserPen,
-} from "lucide-react";
+import { Key, MonitorPlay, Play, Trophy } from "lucide-react";
 
 import {
   Sidebar,
@@ -17,42 +10,37 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
+import { clerkUserDetail } from "@/lib/user";
+import { getUserByEmailAction } from "@/server/actions/userAction";
 
 // Menu items.
 const items = [
   {
     title: "Stream Key",
-    url: "/dashboard/key",
+    url: "/key",
     icon: Key,
   },
   {
     title: "Stream",
-    url: "/dashboard/stream",
+    url: "/stream",
     icon: Play,
   },
   {
     title: "Achievements",
-    url: "/dashboard/achievement",
+    url: "/achievement",
     icon: Trophy,
   },
   {
     title: "Studio",
-    url: "/dashboard/studio",
+    url: "/studio",
     icon: MonitorPlay,
-  },
-  {
-    title: "Profile",
-    url: "/profile",
-    icon: UserPen,
-  },
-  {
-    title: "Settings",
-    url: "/settings",
-    icon: Settings,
   },
 ];
 
-export function DashSidebar() {
+export async function DashSidebar() {
+  const { email } = await clerkUserDetail();
+  if (!email) return null;
+  const user = await getUserByEmailAction(email);
   return (
     <Sidebar className="top-15 min-h-screen ">
       <SidebarContent>
@@ -65,7 +53,7 @@ export function DashSidebar() {
                   className="font-bold text-4xl"
                 >
                   <SidebarMenuButton asChild>
-                    <Link href={item.url}>
+                    <Link href={`/dashboard/u/${user?.id}/${item.url}`}>
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>

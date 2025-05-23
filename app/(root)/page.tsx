@@ -1,16 +1,15 @@
 // import Home from "@/components/pages/Home/Index";
-import { currentUser } from "@clerk/nextjs/server";
+import { clerkUserDetail } from "@/lib/user";
 import { createUserAction, userInDbAction } from "@/server/actions/userAction";
-import { UserType } from "@/types/auth";
+import { UserType } from "@/types/user";
 export default async function Home() {
-  const user = await currentUser();
-  const email = user?.emailAddresses[0]?.emailAddress;
+  const { email, name, pic } = await clerkUserDetail();
   const userindb = await userInDbAction(email as string);
-  if (userindb === false) {
+  if (userindb === false && email && name) {
     const data: UserType = {
-      name: user?.firstName,
-      email: user?.emailAddresses[0]?.emailAddress,
-      pic: user?.imageUrl,
+      name,
+      email,
+      pic,
     };
     await createUserAction(data);
   }
