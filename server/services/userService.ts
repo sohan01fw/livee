@@ -28,7 +28,6 @@ const createUser = async (data: UserType) => {
         email: data.email,
         pic: data.pic,
         bio: data.bio,
-        streamkey: data.streamkey,
       },
     });
   } catch (e) {

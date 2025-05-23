@@ -19,7 +19,7 @@ import {
 import { Copy, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import { createKeyUrl } from "@/server/actions/livekit/ingress";
-import { getUserByIdAction } from "@/server/actions/userAction";
+import { getStreamByUserIdAction } from "@/server/actions/streamAction";
 
 export function StreamKey({ id }: { id: string }) {
   const [streamKey, setStreamkey] = useState<string>("");
@@ -29,11 +29,11 @@ export function StreamKey({ id }: { id: string }) {
 
   useEffect(() => {
     const getKeyAndUrl = async () => {
-      const user = await getUserByIdAction(id);
-      console.log("USER:", user);
-      if (!user) return;
-      setStreamkey(user.streamkey || "");
-      setStreamUrl(user.streamurl || "");
+      const streams = await getStreamByUserIdAction(id);
+      const userStream = streams[0];
+      if (!userStream) return;
+      setStreamkey(userStream.streamkey || "");
+      setStreamUrl(userStream.streamurl || "");
     };
     getKeyAndUrl();
   }, [id, triggered]);

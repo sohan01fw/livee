@@ -11,7 +11,7 @@ import {
   TrackSource,
 } from "livekit-server-sdk";
 import { v4 } from "uuid";
-import { updateKeyAndUrlAction } from "./livekitAction";
+import { createStreamAction } from "../streamAction";
 
 const ingressClient = new IngressClient(
   process.env.LIVEKIT_URL!,
@@ -61,10 +61,10 @@ export const createKeyUrl = async (selfid: string): Promise<void> => {
   const url = ingressData.url;
   const key = ingressData.streamKey;
 
-  console.log("KEY AND URL:", key, url, selfid);
   // update the db with new key and url
-  await updateKeyAndUrlAction({
-    id: selfid,
+  await createStreamAction({
+    userId: selfid,
+    roomid: roomId,
     streamkey: key,
     streamurl: url,
   });
