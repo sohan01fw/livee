@@ -4,9 +4,10 @@ import {
   useTracks,
 } from "@livekit/components-react";
 import { ConnectionState, Track } from "livekit-client";
+import Livevideo from "./Livevideo";
 
 export default function VideoStream({
-  hostName,
+  // hostName,
   hostId,
 }: {
   hostName: string;
@@ -25,7 +26,7 @@ export default function VideoStream({
   } else if (!participant || tracks.length === 0) {
     content = <p> loading...</p>;
   } else {
-    content = <p>live video</p>;
+    content = <Livevideo participant={participant} />;
   }
   return <div>{content}</div>;
 }
