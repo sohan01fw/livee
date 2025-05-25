@@ -3,13 +3,13 @@ import { StreamKey } from "../_components/Streamkey";
 export default async function Key({
   params,
 }: {
-  params: Promise<{ selfid: string }>;
+  params: Promise<{ uid: string }>;
 }) {
-  const { selfid } = await params;
+  const { uid } = await params;
 
   return (
     <div>
-      <StreamKey id={selfid} />
+      <StreamKey id={uid} />
     </div>
   );
 }

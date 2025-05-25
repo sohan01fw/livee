@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 import { clerkUserDetail } from "@/lib/user";
-import { getUserByEmailAction } from "@/server/actions/userAction";
+import { getUserByEmailAction } from "@/app/server/actions/userAction";
 
 // Menu items.
 const items = [

@@ -10,7 +10,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
-import { getAllUsersAction } from "@/server/actions/userAction";
+import { getAllUsersAction } from "@/app/server/actions/userAction";
 import { User } from "@prisma/client";
 import Image from "next/image";
 import { UserType } from "@/types/user";

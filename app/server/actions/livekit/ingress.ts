@@ -1,4 +1,5 @@
 "use server";
+
 import {
   CreateIngressOptions,
   IngressAudioEncodingPreset,
@@ -11,7 +12,9 @@ import {
   TrackSource,
 } from "livekit-server-sdk";
 import { v4 } from "uuid";
-import { createStreamAction } from "../streamAction";
+import { createStreamAction, getStreamByUserIdAction } from "../streamAction";
+import { getSelf } from "../../services/auth.service";
+import { getUserById } from "../../services/userService";
 
 const ingressClient = new IngressClient(
   process.env.LIVEKIT_URL!,
@@ -26,13 +29,20 @@ const roomServiceClient = new RoomServiceClient(
 );
 
 //create the ingress
-export const createKeyUrl = async (selfid: string): Promise<void> => {
+export const createKeyUrl = async (userId: string): Promise<void> => {
+  const room = await getStreamByUserIdAction(userId);
+  //delete all ingress
+  const roomname = String(room?.roomid);
+  await deleteAllIngress(roomname);
+
+  const user = await getUserById(userId);
+
   const roomId = v4();
   const ingressOptions: CreateIngressOptions = {
     name: "OBS Stream",
     roomName: roomId,
-    participantIdentity: selfid,
-    bypassTranscoding: true,
+    participantIdentity: userId,
+    participantName: user?.name || "",
     video: new IngressVideoOptions({
       source: TrackSource.CAMERA,
       encodingOptions: {
@@ -48,9 +58,7 @@ export const createKeyUrl = async (selfid: string): Promise<void> => {
       },
     }),
   };
-  //delete all ingress
-  const roomname = String(ingressOptions.roomName);
-  await deleteAllIngress(roomname);
+
   const ingressData = await ingressClient.createIngress(
     IngressInput.RTMP_INPUT,
     ingressOptions,
@@ -61,10 +69,13 @@ export const createKeyUrl = async (selfid: string): Promise<void> => {
   const url = ingressData.url;
   const key = ingressData.streamKey;
 
+  // get auth self id
+  const selfid = await getSelf();
   // update the db with new key and url
   await createStreamAction({
-    userId: selfid,
+    userId,
     roomid: roomId,
+    authid: selfid?.id,
     streamkey: key,
     streamurl: url,
   });

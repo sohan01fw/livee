@@ -1,8 +1,8 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
 import type { Metadata } from "next";
-import { DashSidebar } from "./u/[selfid]/_components/Sidebar";
-import { Navbar } from "./u/[selfid]/_components/Navbar";
 import { Toaster } from "@/components/ui/sonner";
+import { Navbar } from "./u/[uid]/_components/Navbar";
+import { DashSidebar } from "./u/[uid]/_components/Sidebar";
 
 export const metadata: Metadata = {
   title: "livee dashboard",

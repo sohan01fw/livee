@@ -10,6 +10,7 @@ const createStream = async (data: StreamType) => {
         title: data.title || "",
         thumbnail: data.thumbnail ?? null,
         roomid: data.roomid ?? null,
+        authid: data.authid ?? null,
         streamkey: data.streamkey ?? null,
         streamurl: data.streamurl ?? null,
         startedAt: data.startedAt ?? null,
@@ -29,12 +30,15 @@ const createStream = async (data: StreamType) => {
 
 const getStreamsByUserId = async (userId: string) => {
   try {
-    const streams = await prisma.streams.findMany({
+    const streams = await prisma.streams.findFirst({
       where: {
         userId: userId, // specify the user
       },
       orderBy: {
         createdAt: "desc",
+      },
+      include: {
+        user: true,
       },
     });
     return streams;

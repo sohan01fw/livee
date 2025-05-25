@@ -1,6 +1,9 @@
 // import Home from "@/components/pages/Home/Index";
 import { clerkUserDetail } from "@/lib/user";
-import { createUserAction, userInDbAction } from "@/server/actions/userAction";
+import {
+  createUserAction,
+  userInDbAction,
+} from "@/app/server/actions/userAction";
 import { UserType } from "@/types/user";
 export default async function Home() {
   const { email, name, pic } = await clerkUserDetail();

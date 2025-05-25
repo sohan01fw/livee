@@ -18,8 +18,8 @@ import {
 } from "@/components/ui/tooltip";
 import { Copy, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
-import { createKeyUrl } from "@/server/actions/livekit/ingress";
-import { getStreamByUserIdAction } from "@/server/actions/streamAction";
+import { createKeyUrl } from "@/app/server/actions/livekit/ingress";
+import { getStreamByUserIdAction } from "@/app/server/actions/streamAction";
 
 export function StreamKey({ id }: { id: string }) {
   const [streamKey, setStreamkey] = useState<string>("");
@@ -30,7 +30,7 @@ export function StreamKey({ id }: { id: string }) {
   useEffect(() => {
     const getKeyAndUrl = async () => {
       const streams = await getStreamByUserIdAction(id);
-      const userStream = streams[0];
+      const userStream = streams;
       if (!userStream) return;
       setStreamkey(userStream.streamkey || "");
       setStreamUrl(userStream.streamurl || "");

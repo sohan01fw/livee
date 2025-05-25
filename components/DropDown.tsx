@@ -12,7 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"; //
 import { SignOutButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { getUserByEmailAction } from "@/server/actions/userAction";
+import { getUserByEmailAction } from "@/app/server/actions/userAction";
 
 export function UserDropdown({ email }: { email: string | undefined }) {
   const [userId, setUserId] = useState<string>();
