@@ -19,7 +19,7 @@ export default function IndexLayout({
           <Navbar />
         </nav>
         <div className="grid grid-cols-[250px_1fr] h-full">
-          <aside className=" w-[17rem] h-[70vh]  overflow-hidden overflow-y-scroll ">
+          <aside className=" w-[17rem]   overflow-hidden overflow-y-scroll ">
             <Sidebar />
           </aside>
           <main className="overflow-y-auto">{children}</main>

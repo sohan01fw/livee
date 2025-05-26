@@ -1,13 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,6 +14,9 @@ import { Copy, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import { createKeyUrl } from "@/app/server/actions/livekit/ingress";
 import { getStreamByUserIdAction } from "@/app/server/actions/streamAction";
+import { Dialog } from "@/components/Dialog";
+import useSWR from "swr";
+import { LoadingKeyAndUrl } from "./loading";
 
 export function StreamKey({ id }: { id: string }) {
   const [streamKey, setStreamkey] = useState<string>("");
@@ -27,16 +24,25 @@ export function StreamKey({ id }: { id: string }) {
   const [masked, setMasked] = useState(true);
   const [triggered, setTriggered] = useState(false);
 
+  const fetcher = async (id: string) => {
+    return await getStreamByUserIdAction(id);
+  };
+  const { data, error, isLoading } = useSWR(id ? ["stream", id] : null, () =>
+    fetcher(id),
+  );
   useEffect(() => {
     const getKeyAndUrl = async () => {
-      const streams = await getStreamByUserIdAction(id);
-      const userStream = streams;
-      if (!userStream) return;
-      setStreamkey(userStream.streamkey || "");
-      setStreamUrl(userStream.streamurl || "");
+      if (error) {
+        toast.error("Error loading stream");
+        return;
+      }
+      if (!data) return;
+
+      setStreamkey(data.streamkey || "");
+      setStreamUrl(data.streamurl || "");
     };
     getKeyAndUrl();
-  }, [id, triggered]);
+  }, [id, triggered, data, error, isLoading]);
 
   const copyToClipboard = (value: string, label: string) => {
     navigator.clipboard.writeText(value).then(() => {
@@ -52,8 +58,21 @@ export function StreamKey({ id }: { id: string }) {
   };
 
   return (
-    <div className="space-y-6 p-4 md:p-6">
-      <Card>
+    <div className=" flex justify-center items-center ">
+      <div className="flex justify-end  ">
+        <Dialog
+          className="w-52 text-center  rounded-lg p-2 "
+          openText="Create new Credentials"
+          title="Create new Credentials"
+          description={`Are you sure you want to create new credentials? This will overwrite the existing credentials.
+          `}
+          onConfirm={handleCreateNewCredentials}
+          onCancel={() => setTriggered(!triggered)}
+          confirmText="Create"
+          cancelText="Cancel"
+        />
+      </div>
+      <Card className="bg-transparent">
         <CardHeader>
           <CardTitle>Stream Credentials</CardTitle>
         </CardHeader>
@@ -62,7 +81,11 @@ export function StreamKey({ id }: { id: string }) {
           <div className="flex flex-col">
             <Label className="mb-1">Stream URL</Label>
             <div className="flex items-center space-x-2">
-              <Input value={streamUrl} readOnly className="flex-1" />
+              {isLoading ? (
+                <LoadingKeyAndUrl />
+              ) : (
+                <Input value={streamUrl} readOnly className="flex-1" />
+              )}
               <Tooltip>
                 <TooltipTrigger asChild>
                   {streamUrl === "" ? (
@@ -94,12 +117,16 @@ export function StreamKey({ id }: { id: string }) {
           <div className="flex flex-col">
             <Label className="mb-1">Stream Key</Label>
             <div className="flex items-center space-x-2">
-              <Input
-                type={masked ? "password" : "text"}
-                value={streamKey}
-                readOnly
-                className="flex-1"
-              />
+              {isLoading ? (
+                <LoadingKeyAndUrl />
+              ) : (
+                <Input
+                  type={masked ? "password" : "text"}
+                  value={streamKey}
+                  readOnly
+                  className="flex-1"
+                />
+              )}
 
               <Button
                 variant="ghost"
@@ -140,14 +167,6 @@ export function StreamKey({ id }: { id: string }) {
             </div>
           </div>
         </CardContent>
-        <CardFooter>
-          <Button
-            className="w-full bg-green-500 hover:bg-green-600 text-black hover:cursor-pointer"
-            onClick={handleCreateNewCredentials}
-          >
-            Create new Credentials
-          </Button>
-        </CardFooter>
       </Card>
     </div>
   );

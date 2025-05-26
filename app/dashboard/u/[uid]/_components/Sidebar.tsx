@@ -42,7 +42,7 @@ export async function DashSidebar() {
   if (!email) return null;
   const user = await getUserByEmailAction(email);
   return (
-    <Sidebar className="top-15 min-h-screen ">
+    <Sidebar className="top-16  ">
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>

@@ -39,7 +39,7 @@ export default function Sidebar() {
   return (
     <aside
       className={cn(
-        "flex flex-col bg-black text-white transition-width duration-300  p-2 ",
+        "flex flex-col bg-background/95 h-screen border   text-white transition-width duration-300  p-2 ",
         collapsed ? "w-15" : "w-64",
       )}
     >
