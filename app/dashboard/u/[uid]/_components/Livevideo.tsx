@@ -19,7 +19,7 @@ export default function Livevideo({
     });
   return (
     <div ref={wrapperRef} className="relative h-full flex">
-      <video ref={videoRef} width="100%" />
+      <video ref={videoRef} width="100%" height="100%" />
     </div>
   );
 }

@@ -28,5 +28,9 @@ export default function VideoStream({
   } else {
     content = <Livevideo participant={participant} />;
   }
-  return <div>{content}</div>;
+  return (
+    <div className=" min-h-[18rem] flex flex-col justify-center items-center">
+      {content}
+    </div>
+  );
 }
